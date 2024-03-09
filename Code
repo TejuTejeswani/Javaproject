@@ -1,0 +1,191 @@
+package sample;
+public class Node {
+String name;
+long mobile;
+String upi;
+int seat;
+Node next;
+public Node(String name, long mobile, String upi, int seat) {
+this.name=name;
+this.mobile=mobile;
+this.upi=upi;
+this.seat=seat;
+next=null;
+}
+public boolean setMobile(long mobile) {
+Node t=Movie.start;
+long a=mobile;
+while(t!=null && a!=t.mobile) {
+t=t.next;
+}
+if(t==null) {
+this.mobile=mobile;
+return true;
+}
+else {
+return false;
+}
+}
+public String toString() {
+String s;
+s="\ncustomer details";
+s+="\nNAME : "+name;
+s+="\nmobile : "+mobile;
+s+="\nupi id : "+upi;
+s+="\nseat confirmed : "+seat;
+return s;
+}
+}
+package sample;
+import java.util.Scanner;
+public class Movie {
+static Node start=null;
+Node latest=null;
+Scanner sc= new Scanner(System.in);
+String a,c;
+Long b;
+int d;
+public void book() {
+System.out.println("Enter Name");
+a = sc.next();
+System.out.println("Enter Mobile Number");
+b = sc.nextLong();
+System.out.println("Enter UPI ID");
+c = sc.next();
+System.out.println("Enter seat Number");
+d = sc.nextInt();
+Node n=new Node(a,b,c,d);
+if(n.setMobile(n.mobile)) {
+if(n.seat>=1 && n.seat<=100) {
+if(start==null) {
+start=n;
+latest=n;
+}
+else {
+int s=n.seat;
+long q=n.mobile;
+Node t=start;
+while(t!=null && s!=t.seat) {
+t=t.next;
+}
+if(t==null) {
+Node t1=start;
+while(t1.next!=null) {
+t1=t1.next;
+}
+t1.next=n;
+latest=n;
+}
+else {
+System.out.println("seat is already booked");
+}
+}
+}
+else {
+System.out.println("provide seat choice between 1 to 100");
+}
+}
+else {
+System.out.println("mobile number already exists");
+}
+System.out.println(" booking confirmed :) ");
+}//booking
+public void display() {
+Node t=start;
+if(t==null) {
+System.out.println("no booking availables");
+}
+else {
+while(t!=null) {
+System.out.println(t);
+t=t.next;
+}
+}
+}
+public void refund() {
+System.out.println("enter mobile associated with your booking");
+long a=sc.nextLong();
+int pos=searchMobile(a);
+if(pos==-1) {
+System.out.println("mobile number not found");
+}
+else {
+if(a==start.mobile) {
+System.out.println("your amount is successfully refunded in upi id :
+"+start.upi);
+start=start.next;
+}
+else if(a==latest.mobile) {
+System.out.println("your amount is successfully refunded in upi id :
+"+latest.upi);
+Node t=start;
+while(t.next.next!=null) {
+t=t.next;
+}
+t.next=null;
+latest=t;
+}
+else {
+
+int count=1;
+Node t=start;
+while(t!=null && count!=pos-1) {
+t=t.next;
+count++;
+}
+System.out.println("your amount is successfully refunded in upi id :
+"+t.next.upi);
+t.next=t.next.next;
+}
+}
+}//refund
+public int searchMobile(long a) {
+Node t=start;
+int count=1;
+while(t!=null && a!=t.mobile) {
+t=t.next;
+count++;
+}
+if(t==null) {
+return -1;
+}
+else {
+return count;
+}
+}//searchMobile
+}
+package sample;
+import java.util.Scanner;
+public class Demo {
+public static void main(String[] args) {
+Movie b=new Movie();
+boolean repeat=true;
+int ch;
+while(repeat) {
+System.out.println("\nK.G.F Booking is going on at Rs.100/-");
+System.out.println("1.BOOK TICKET");
+System.out.println("2.CANCEL TICKET");
+System.out.println("3.DISPLAY");
+System.out.println("5.EXIT");
+System.out.println("Enter you choice");
+ch=b.sc.nextInt();
+switch(ch) {
+case 1:
+System.out.println("book tickets for K.G.F");
+b.book();
+break;
+case 2:
+b.refund();
+break;
+case 3:
+b.display();
+break;
+case 4:
+repeat=false;
+break;
+default :
+System.out.println("Enter valid choice");
+}//switch
+}//while
+}
+}
